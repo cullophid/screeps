@@ -10,7 +10,6 @@ var HarvesterController = module.exports = function (spawn) {
       this.harvesters.push(new Harvester(creep));
     }
   }
-  console.log('Harvesters: ', this.harvesters.length);
   if (this.harvesters.length < spawn.memory.harvesters) {
     this.spawnHarvester();
   }
@@ -18,6 +17,7 @@ var HarvesterController = module.exports = function (spawn) {
 
 HarvesterController.prototype.spawnHarvester = function () {
   if (!this.spawn.spawning) {
+    console.log('Spawning new Harvester');
     this.spawn.createCreep([Game.WORK, Game.MOVE, Game.CARRY], 'Harvester-' + Game.time, {role :"harvester", spawn : this.spawn.name});
   }
 };

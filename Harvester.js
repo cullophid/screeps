@@ -11,7 +11,6 @@ Harvester.prototype.harvest = function () {
     this.creep.harvest(sources[0]);
   }
   else {
-    console.log('creep spawn: ', this.spawn.name);
     this.creep.moveTo(this.spawn);
     this.creep.transferEnergy(this.spawn);
   }
