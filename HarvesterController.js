@@ -8,27 +8,40 @@ var HarvesterController = module.exports = function (spawn) {
 
 };
 
-
 HarvesterController.prototype.update = function () {
+  console.log('UPDATE')
   this.clean();
-  this.spawnHarvesters(this.harvesters.length - this.spawn.memory.harvesters); // does nothign if passed 0
-  this.harvest();
+  console.log('update');
+  console.log(this.harvesters.length);
+  console.log(this.spawn.memory.harvesters);
+  if (this.harvesters.length < Memory.harvesters) {
+    this.spawnHarvester(); // does nothign if passed 0
+  }
+  //   this.harvest();
 };
 
 HarvesterController.prototype.clean = function () {
-  this.harvesters = this.havesters.reduce(function (harvesters, harvester) {
-    if(harvester.creep) {
-      harvesters.push(harvester);
+  this.harvesters = this.harvesters.reduce(function (harvesters, harvester) {
+    if(this.creep.ticksToLive > 0) {
+      this.harvesters.push(harvester);
     }
+
     return harvesters;
   },[]);
+  console.log('CLEAN: ' +this.harvesters.length);
 };
 
-HarvesterController.prototype.spawnHarvesters = function (count) {
-  var i;
-  for (i = 0; i <= count; i += 1) {
-    this.harvesters.push(new Harvester(this.spawn));
+HarvesterController.prototype.spawnHarvester = function () {
+  if (this.spawn.spawning) {
+    return false;
   }
+  try {
+    this.harvesters.push(new Harvester(this.spawn));
+  } catch (e) {
+    console.log('Error Spawning Harvester : ' + e.message);
+    return false;
+  }
+  return true;
 };
 
 HarvesterController.prototype.harvest = function () {

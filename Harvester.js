@@ -1,17 +1,15 @@
 "use strict";
-var counter = 0;
-
-
 var Harvester = module.exports = function (spawn) {
-  var name = spawn.createCreep([Game.WORK, Game.MOVE, Game.CARRY], 'Harvester-'+ (counter += 1));
+  console.log('TICK: ' + Game.time);
+  var name = spawn.createCreep([Game.WORK, Game.MOVE, Game.CARRY], 'Harvester-'+ Game.time);
   if (name < 0) {
-    throw new Error(name);
+    console.log('ERROR: ' + name)
+    // throw new Error(name);
   }
+  console.log('CREEP : ' + name);
   this.creep = Game.creeps[name];
   this.creep.memory.role = 'harvester';
   this.spawn = spawn;
-
-
 };
 Harvester.prototype.harvest = function () {
   if(this.creep.energy < this.creep.energyCapacity) {
