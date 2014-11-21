@@ -1,11 +1,7 @@
 "use strict";
 var HarvesterController = require('HarvesterController');
 var spawn = Game.spawns.Spawn1;
-if (!spawn) {
-  throw new Error('no spawn');
-}
+spawn.memory.harvesters = spawn.memory.harvesters || 2;
 
-if (!spawn.memory.harversterController) {
-  spawn.harvesterController = new HarvesterController(spawn);
-}
-spawn.harvesterController.update();
+spawn.harvesterController = new HarvesterController(spawn);
+spawn.harvesterController.harvest();

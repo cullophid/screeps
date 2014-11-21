@@ -1,47 +1,25 @@
 "use strict";
 var Harvester = require('Harvester');
-
-
 var HarvesterController = module.exports = function (spawn) {
+  var name, creep;
   this.spawn = spawn;
   this.harvesters = [];
-
-};
-
-HarvesterController.prototype.update = function () {
-  console.log('UPDATE')
-  this.clean();
-  console.log('update');
-  console.log(this.harvesters.length);
-  console.log(this.spawn.memory.harvesters);
-  if (this.harvesters.length < Memory.harvesters) {
-    this.spawnHarvester(); // does nothign if passed 0
-  }
-  //   this.harvest();
-};
-
-HarvesterController.prototype.clean = function () {
-  this.harvesters = this.harvesters.reduce(function (harvesters, harvester) {
-    if(this.creep.ticksToLive > 0) {
-      this.harvesters.push(harvester);
+  for (name in Game.creeps) {
+    creep = Game.creeps[name];
+    if (!creep.spawning && creep.memory.role === 'harvester') {
+      this.harvesters.push(new Harvester(creep));
     }
-
-    return harvesters;
-  },[]);
-  console.log('CLEAN: ' +this.harvesters.length);
+  }
+  console.log('Harvesters: ', this.harvesters.length);
+  if (this.harvesters.length < spawn.memory.harvesters) {
+    this.spawnHarvester();
+  }
 };
 
 HarvesterController.prototype.spawnHarvester = function () {
-  if (this.spawn.spawning) {
-    return false;
+  if (!this.spawn.spawning) {
+    this.spawn.createCreep([Game.WORK, Game.MOVE, Game.CARRY], 'Harvester-' + Game.time, {role :"harvester", spawn : this.spawn.name});
   }
-  try {
-    this.harvesters.push(new Harvester(this.spawn));
-  } catch (e) {
-    console.log('Error Spawning Harvester : ' + e.message);
-    return false;
-  }
-  return true;
 };
 
 HarvesterController.prototype.harvest = function () {
